@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function BuilderPage() {
-  return (
-    <div>BuilderPage</div>
-  )
+  return <div>BuilderPage</div>;
 }
 
-export default BuilderPage
+export default BuilderPage;

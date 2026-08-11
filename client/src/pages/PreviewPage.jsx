@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function PrivewPage() {
-  return (
-    <div>PrivewPage</div>
-  )
+  return <div>PrivewPage</div>;
 }
 
-export default PrivewPage
+export default PrivewPage;

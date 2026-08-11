@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function PublishPage() {
-  return (
-    <div>PublishPage</div>
-  )
+  return <div>PublishPage</div>;
 }
 
-export default PublishPage
+export default PublishPage;
