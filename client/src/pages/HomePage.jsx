@@ -13,7 +13,7 @@ function HomePage() {
 
   const navigate = useNavigate();
   return (
-    <div className="h-screen overflow-y-scroll text-white font-sans bg-[url('/bg-img.png')] bg-cover bg-center bg-no-repeat">
+    <div className="h-screen overflow-y-scroll text-white font-sans bg-[url('/bg-img.png')] bg-cover bg-center bg-no-repeat hidden-scrollbar">
       {/* navabar */}
       <nav className="sticky top-0 z-10 flex items-center justify-between px-6 py-4">
         <div className="flex item-center gap-2">

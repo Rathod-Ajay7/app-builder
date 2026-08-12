@@ -1,7 +1,8 @@
-import { createContext, useState, useContext, useEffect, useCallback } from "react";
+import { createContext, useState, useContext, useEffect, useCallback, useMemo } from "react";
 import api from "../api/api";
 import toast from "react-hot-toast";
 import { Await, Navigate, useNavigate } from "react-router-dom";
+import debounce from "lodash.debounce";
 
 const AppContext = createContext(undefined);
 
@@ -178,6 +179,54 @@ export function AppContextProvider({ children }) {
     }, [user]
   )
 
+
+  const handlechat = useCallback(
+    async (prompt) => {
+      if (!activeProject || !user) return;
+      setchatloading(true);
+      try {
+        const { data } = await api.post(`/api/projects/${activeProject._id}/chat`, { prompt })
+        setActiveProject(data);
+        if (data.errors && data.errors.length > 0) {
+          toast.error(`${data.errors.length} revision patch(es) falied`);
+        }
+        else {
+          toast.success(`updated to version ${data.version}`);
+        }
+
+      } catch (err) {
+        console.error("revision request failed", err);
+        toast.error(err?.response?.data?.error || "revision request failed");
+
+      } finally {
+        setchatloading(false);
+      }
+    }, [activeProject, user]
+  )
+  const debouncedsave = useMemo(
+    () => debounce(async (files, id) => {
+      try {
+        await api.put(`/api/projects/${id}/files`, { files })
+      } catch (err) {
+        console.error("failed to autosave files:", err)
+        toast.error("failed to save code modification")
+      }
+    }, 1000), []
+  )
+
+  useEffect(() => {
+    return () => {
+      debouncedsave.cancel();
+    }
+  }, [debouncedsave])
+
+  const updateprojectfiles = useCallback(
+    async (files) => {
+      if (!activeProject || !user) return;
+      debouncedsave(files, activeProject._id)
+    }, [activeProject, user, debouncedsave]
+  )
+
   return (
     <AppContext.Provider
       value={{
@@ -199,7 +248,8 @@ export function AppContextProvider({ children }) {
         loadproject,
         handlegenrate,
         handledelet,
-        logout
+        logout,
+        updateprojectfiles
       }}
     >
       {children}

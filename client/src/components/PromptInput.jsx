@@ -99,7 +99,7 @@ const PromptInput = ({
                 disabled={loading}
                 rows={large ? 5 : 1}
                 className={
-                    "flex-1 bg-transparent border-none outline-none text-zinc-900 placeholder:text-zinc-400 " +
+                    "flex-1 bg-transparent border-none outline-none resize-none text-zinc-900 placeholder:text-zinc-400 " +
                     (large ? "text-base" : "text-sm")
                 }
             />
@@ -107,7 +107,7 @@ const PromptInput = ({
             <button
                 type="submit"
                 disabled={!value.trim() || loading}
-                className="inline-flex items-center bg-zinc-950 text-white hover:bg-zinc-800 disabled:opacity-40 cursor-pointer rounded-full shrink-0"
+                className="inline-flex items-center justify-center bg-zinc-950 text-white hover:bg-zinc-800 disabled:opacity-40 cursor-pointer rounded-full shrink-0"
                 style={{
                     width: large ? 36 : 24,
                     height: large ? 36 : 24,
