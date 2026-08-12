@@ -134,7 +134,7 @@ const Previewpanel = ({ project, activefile, showcode }) => {
                                 minWidth: 0
                             }} />
                     )}
-                    <SandpackPreview showNavigator={false} showRefreshButton showOpenInCodeSandbox={false} showSandpackErrorOverlay style={{ height: "100%", flex: showcode ? 1 : 2, minWidth: 0 }} />
+                    <SandpackPreview showNavigator={false} showRefreshButton showOpenInCodeSandbox={false} showSandpackErrorOverlay={showerroroverlay} style={{ height: "100%", flex: showcode ? 1 : 2, minWidth: 0 }} />
 
                 </SandpackLayout>
 
