@@ -8,7 +8,7 @@ const userschema = new Schema({
 }, { timestamps: true });
 
 //hash password before saving 
-userschema.pre('save', async function (next) {
+userschema.pre('save', async function () {
     if (!this.isModified('password')) return;
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -21,5 +21,3 @@ userschema.methods.comparepassword = async function (password) {
 
 export const User = mongoose.model('User', userschema);
 export const user = User;
-
-
