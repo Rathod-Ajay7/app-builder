@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { SandpackCodeEditor, SandpackLayout, SandpackPreview, SandpackProvider, useSandpack } from '@codesandbox/sandpack-react';
-import { detectDependencies } from '../utils/sandpackUtils';
+import { detectDependencies, sanitizeCode } from '../utils/sandpackUtils';
 import { useAppContext } from '../context/AppContext';
 import SandpackErrorMonitor from './sandpackerrormonitor';
 
@@ -39,12 +39,12 @@ const Previewpanel = ({ project, activefile, showcode }) => {
 
     const [showerroroverlay, setshowerroroverlay] = useState(true);
     //keep local state of files that updates as user type
-    const [livefiles, setlivefiles] = useState(project.files);
-    const [prevprojectkey, setprevprojectkey] = useState(`${project.id}-${project.version}`);
-    const currentkey = `${project.id}-${project.version}`;
+    const [livefiles, setlivefiles] = useState(project.files || {});
+    const [prevprojectkey, setprevprojectkey] = useState(`${project._id}-${project.version}`);
+    const currentkey = `${project._id}-${project.version}`;
 
     if (prevprojectkey !== currentkey) {
-        setlivefiles(project.files)
+        setlivefiles(project.files || {})
         setprevprojectkey(currentkey);
     }
 
@@ -64,31 +64,28 @@ const Previewpanel = ({ project, activefile, showcode }) => {
     //live file to send pack formate
     const sandpackfile = useMemo(() => {
         const spfiles = {};
-        for (const [path, content] of Object.entries(livefiles)) {
-            const filecode = typeof content === "string" ? content : content?.content || "";
+        for (const [path, content] of Object.entries(livefiles || {})) {
+            const rawcode = typeof content === "string" ? content : content?.content || "";
+            const filecode = sanitizeCode(rawcode, path);
             spfiles[path] = {
                 code: filecode,
                 active: path === activefile,
-
             }
         }
         return spfiles;
     }, [livefiles, activefile])
 
     //dependency
-
     const dependency = useMemo(() => {
-        return detectDependencies(livefiles);
+        return detectDependencies(livefiles || {});
     }, [livefiles])
-
-
 
     return (
         <div className='h-full w-full'>
-            <SandpackProvider key={project._id} template='react' files={sandpackfile} customSetup={{ dependency }} options={{
+            <SandpackProvider key={`${project._id}-${project.version}`} template='react' files={sandpackfile} customSetup={{ dependencies: dependency }} options={{
                 externalResources: [
                     "https://cdn.tailwindcss.com",
-                    "https://cdnjs.cloudfare.con/ajax/libs/font-awesome/6.4.0/css/all.min.css",
+                    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css",
                 ],
                 classes: {
                     "sp-wrapper": "sp-wrapper",
@@ -96,8 +93,8 @@ const Previewpanel = ({ project, activefile, showcode }) => {
                     "sp-preview": "sp-preview"
                 },
                 logLevel: 0,
-
             }} theme={{
+
                 colors: {
                     surface1: "#ffffff",
                     surface2: "#f4f4f5",
@@ -105,7 +102,7 @@ const Previewpanel = ({ project, activefile, showcode }) => {
                     clickable: "#72727a",
                     base: "#09090b",
                     disabled: "#a1a1aa",
-                    hover: "19191b",
+                    hover: "#19191b",
                     accent: "#18181b",
                     error: "#ef4444",
                     errorSurface: "#fef2f2",

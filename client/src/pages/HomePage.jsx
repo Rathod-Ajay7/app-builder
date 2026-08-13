@@ -38,15 +38,15 @@ function HomePage() {
             <span className="px-3 py-1 text-[11px] bg-red-700 rounded-full font-medium tracking-wide">
               PROMO
             </span>
-            <span>Creat your first project for free.</span>
+            <span>Create your first project for free.</span>
           </div>
 
           {/*title*/}
           <h1 className="text-center text-4xl md:text-6xl font-medium mt-4 max-w-2xl text-white">
             Let's Build Your App Together
           </h1>
-          <p className="text-center text-sm md:text-base max-w-xl mt-4 text-white/65 loading-relaxed">
-            Describe your idra and watch AI design, structure and lunch your
+          <p className="text-center text-sm md:text-base max-w-xl mt-4 text-white/65 leading-relaxed">
+            Describe your idea and watch AI design, structure and launch your
             website instantly. No coding required.
           </p>
 
@@ -104,7 +104,7 @@ function HomePage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button className="p-1.5 rounded-md text-zinc-200 hover:texxt-red-400 hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                      <button className="p-1.5 rounded-md text-zinc-200 hover:text-red-400 hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
                         onClick={(e) => {
                           e.stopPropagation();
                           handledelet(p._id)

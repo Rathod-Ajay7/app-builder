@@ -102,7 +102,22 @@ export function validateAndFixCode(code, filePath, context) {
         return `${before}${after}`;
     });
 
-    // 8. Ensure React import exists if JSX is used
+    // 8. Remove known-bad injected lines from previous codeValidator versions
+    const hadInjectedDraw = /^[ \t]*const\s+draw\s*=\s*Array\.isArray\(boardRef\)/m.test(code);
+    if (hadInjectedDraw) {
+        code = code.replace(/^[ \t]*const\s+draw\s*=\s*Array\.isArray\(boardRef\)[^\n]*\n?/gm, "");
+        warnings.push(`${filePath}: Removed injected 'const draw = Array.isArray(boardRef)...' line`);
+    }
+    code = code.replace(/^[ \t]*const\s+winCoords\s*=\s*typeof\s+[^\n]*\n?/gm, "");
+    code = code.replace(/^[ \t]*const\s+winCoords\s*=\s*null;\s*\n?/gm, "");
+
+    // Fix variable naming mismatch (e.g., `isDraw` vs `draw`)
+    if (/\b(?:const|let|var)\s+isDraw\b/.test(code) && /\b(?<!is)draw\b/.test(code) && !/\b(?:const|let|var|function|param)\s+draw\b/.test(code)) {
+        code = code.replace(/\b(?<!is)draw\b/g, "isDraw");
+        warnings.push(`${filePath}: Replaced undeclared 'draw' with 'isDraw'`);
+    }
+
+    // 9. Ensure React import exists if JSX is used
     const hasJSX = /<[A-Za-z]/.test(code);
     const hasReactImport = /import\s+React/.test(code);
     if (hasJSX && !hasReactImport) {
@@ -110,7 +125,7 @@ export function validateAndFixCode(code, filePath, context) {
         warnings.push(`${filePath}: Added missing React import`);
     }
 
-    // 9. Fix import paths that point to incorrect folders/paths compared to what was planned
+    // 10. Fix import paths that point to incorrect folders/paths compared to what was planned
     if (context?.allPlannedFiles) {
         const fixResult = fixImportPaths(code, filePath, context.allPlannedFiles);
         code = fixResult.code;

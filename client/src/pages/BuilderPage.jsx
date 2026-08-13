@@ -32,7 +32,7 @@ function BuilderPage() {
       await api.post(`/api/projects/${id}/publish`)
       const url = `${window.location.origin}/publish/${id}`;
       setpublishurl(url);
-      toast.success("website punlish successfully")
+      toast.success("website published successfully")
     } catch (err) {
       console.error("publish failed", err);
       toast.error("publish failed");
@@ -55,15 +55,8 @@ function BuilderPage() {
     loadproject(id);
   }, [id])
 
-  useEffect(() => {
-    if (!id || !activeProject) return;
-    if (activeProject.status === "pending" || activeProject.status === "generating") {
-      const interval = setInterval(() => {
-        loadproject(id, true);
-      }, 1500)
-      return () => clearInterval(interval);
-    }
-  }, [id, loadproject, activeProject])
+
+
 
   if (loadingactiveproject || !activeProject) {
     return <Loading />
@@ -91,10 +84,10 @@ function BuilderPage() {
         <div className="w-[320px] shrink-0 flex flex-col border-r border-zinc-200 bg-white">
           {/*sidebar tabs */}
           <div className="flex border-b border-zinc-100">
-            <button onClick={() => setlefttab("chat")} className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium cursor-pointer ${lefttab === "chat" ? "text-zinc-900 birder-b-2 border-zinc-900" : "text-zinc-400 hover:text-zinc-700"}`}>
+            <button onClick={() => setlefttab("chat")} className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium cursor-pointer ${lefttab === "chat" ? "text-zinc-900 border-b-2 border-zinc-900" : "text-zinc-400 hover:text-zinc-700"}`}>
               <MessagesSquareIcon size={13} />Chat
             </button>
-            <button onClick={() => setlefttab("files")} className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium cursor-pointer ${lefttab === "files" ? "text-zinc-900 birder-b-2 border-zinc-900" : "text-zinc-400 hover:text-zinc-700"}`}>
+            <button onClick={() => setlefttab("files")} className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium cursor-pointer ${lefttab === "files" ? "text-zinc-900 border-b-2 border-zinc-900" : "text-zinc-400 hover:text-zinc-700"}`}>
               <FolderTreeIcon size={13} />Files
             </button>
           </div>

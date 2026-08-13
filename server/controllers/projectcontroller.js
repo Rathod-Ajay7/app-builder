@@ -1,7 +1,7 @@
 //post /api/projects
 //create new project from an ai prompt.
 
-import { Project } from "../models/project.js";
+import { Project } from "../models/Project.js";
 import crypto from "crypto";
 import { generateProject } from "../services/ai.js";
 

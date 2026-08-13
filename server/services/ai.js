@@ -7,7 +7,8 @@ import { normalizeContent } from './contentNormalizer.js';
 import { validateAndFixCode } from './codeValidator.js';
 
 // OpenRouter Model Client Setup
-const MODEL = process.env.OPENROUTER_MODEL || "openrouter/free";
+const MODEL = process.env.OPENROUTER_MODEL || "openrouter/auto";
+
 const MAX_CONCURRENCY = parseInt(process.env.AI_MAX_CONCURRENCY || "6", 10);
 
 const openrouter = createOpenAI({

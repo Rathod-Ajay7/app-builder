@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect, useCallback, useMemo } from "react";
 import api from "../api/api";
 import toast from "react-hot-toast";
-import { Await, Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import debounce from "lodash.debounce";
 
 const AppContext = createContext(undefined);
@@ -30,7 +30,9 @@ export function AppContextProvider({ children }) {
       const { data } = await api.get("/api/auth/me");
       setUser(data.user);
     } catch (error) {
-      console.log(error);
+      if (error?.response?.status !== 401) {
+        console.log("Session check error:", error);
+      }
       setUser(null);
     } finally {
       setLoadingUser(false);
@@ -90,7 +92,7 @@ export function AppContextProvider({ children }) {
 
 
   //project actions
-  const loadProjects = async () => {
+  const loadProjects = useCallback(async () => {
     if (!user) return;
     try {
       const { data } = await api.get("/api/projects")
@@ -101,14 +103,26 @@ export function AppContextProvider({ children }) {
     } finally {
       setLoadingProject(false);
     }
-  }
+  }, [user]);
 
-  const loadproject = async (_id, silent = false) => {
+  const loadproject = useCallback(async (_id, silent = false) => {
     if (!user) return;
     if (!silent) setloadingactiveproject(true);
     try {
-      const { data } = await api.get(`/api/projects/${_id}`)
-      setActiveProject(data);
+      const { data } = await api.get(`/api/projects/${_id}`);
+      setActiveProject((prev) => {
+        if (!prev) return data;
+        if (
+          prev._id === data._id &&
+          prev.version === data.version &&
+          prev.status === data.status &&
+          prev.updatedAt === data.updatedAt &&
+          (prev.filesgenerated || []).length === (data.filesgenerated || []).length
+        ) {
+          return prev;
+        }
+        return data;
+      });
 
       //default file selection
       const files = Object.keys(data.files || {});
@@ -117,25 +131,29 @@ export function AppContextProvider({ children }) {
           if (files.includes(prev)) return prev;
           if (files.includes("/App.js")) return "/App.js";
           return files[0];
-        })
+        });
       }
     } catch (error) {
       console.error("fail to load project", error);
       if (!silent) {
         toast.error("failed to load project details");
-        navigate("/")
+        navigate("/");
       }
     } finally {
       if (!silent) {
         setloadingactiveproject(false);
       }
     }
-  }
-  //automatically poll active project status genrating or pending
+  }, [user, navigate]);
+
+  //automatically poll active project status generating, pending, or revising
   useEffect(() => {
     if (!activeProject?._id || !user) return;
 
-    const isOngoing = activeProject.status === "genrating" || activeProject.status === "pending" || activeProject.status === "revising";
+    const isOngoing =
+      activeProject.status === "generating" ||
+      activeProject.status === "pending" ||
+      activeProject.status === "revising";
 
     if (isOngoing) {
       setchatloading(true);
@@ -146,7 +164,8 @@ export function AppContextProvider({ children }) {
     } else {
       setchatloading(false);
     }
-  }, [activeProject?._id, activeProject?.status, loadproject, user?._id]);
+  }, [activeProject?._id, activeProject?.status, loadproject, user]);
+
 
   const handlegenrate = useCallback(
     async (prompt) => {
@@ -175,6 +194,8 @@ export function AppContextProvider({ children }) {
       } catch (error) {
         console.error("failed to delete project", error);
         toast.error("failed to delete")
+      } finally {
+        setgeneratingproject(false);
       }
     }, [user]
   )
@@ -248,9 +269,11 @@ export function AppContextProvider({ children }) {
         loadproject,
         handlegenrate,
         handledelet,
+        handlechat,
         logout,
         updateprojectfiles
       }}
+
     >
       {children}
     </AppContext.Provider>

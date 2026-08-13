@@ -1,6 +1,6 @@
 // post /api/projects/:id/chat
 
-import { Project } from "../models/project.js";
+import { Project } from "../models/Project.js";
 import { reviseproject } from "../services/ai.js";
 import { applyOperations } from "../services/diff.js";
 

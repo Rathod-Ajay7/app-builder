@@ -6,7 +6,7 @@ function builderHeader({
 }) {
 
     return (
-        <header className='h-12 shrink-0 flex items-center justify-between px-3 border-b vorder-zinc-200 bg-white'>
+        <header className='h-12 shrink-0 flex items-center justify-between px-3 border-b border-zinc-200 bg-white'>
             <div className='flex item-center gap-2'>
                 <button className='p-1.5 rounded-md text-zinc-400 hover:text-zinc-950 hover:bg-zinc-100 cursor-pointer'
                     onClick={onback}>
@@ -35,7 +35,7 @@ function builderHeader({
                 </button>
                 <button onClick={onopenpreview} className='inline-flex items-center justify-center gap-1.5 py-1.5 px-3 border border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 text-xs font-medium rounded-lg cursor-pointer bg-white'>
                     <ExternalLinkIcon size={13} />
-                    open privew
+                    open preview
                 </button>
 
                 <button onClick={onpublish} disabled={publishing} className='inline-flex items-center justify-center gap-1.5 py-1.5 px-3 border border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 text-xs font-medium rounded-lg cursor-pointer bg-white'>

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { detectDependencies } from '../utils/sandpackUtils';
+import { detectDependencies, sanitizeCode } from '../utils/sandpackUtils';
 import SandpackErrorMonitor from './sandpackerrormonitor';
 import { SandpackLayout, SandpackPreview, SandpackProvider } from '@codesandbox/sandpack-react';
 
@@ -11,7 +11,8 @@ const FullPagePreview = ({ files }) => {
         if (!files) return {};
         const spfiles = {};
         for (const [path, content] of Object.entries(files)) {
-            const filecode = typeof content === "string" ? content : content?.content || "";
+            const rawcode = typeof content === "string" ? content : content?.content || "";
+            const filecode = sanitizeCode(rawcode, path);
             spfiles[path] = {
                 code: filecode,
             }

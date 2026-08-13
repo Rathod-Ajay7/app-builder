@@ -229,7 +229,8 @@ Good copy makes design feel premium. Follow these rules:
 - Do NOT import packages that aren't react, react-dom, or standard sub-components.
 - Every component must return valid JSX wrapped in parentheses: \`return ( <div>...</div> );\`
 - Always import React: \`import React from 'react';\`
-- For event handlers, reference functions that are actually defined in scope, or use inline functions: \`onClick={() => {}}\`.`;
+- For event handlers, reference functions that are actually defined in scope, or use inline functions: \`onClick={() => {}}\`.
+- STRICT VARIABLE SCOPING: Every variable referenced in JSX or conditions MUST be explicitly declared in scope using \`const\` or \`let\`. Keep variable names 100% consistent across functions (e.g. if you declare \`isDraw\`, do not reference \`draw\` in JSX; if you declare \`winningLine\`, do not reference \`winCoords\`). Never use duplicate variable declarations.`;
 
 export const REVISE_SYSTEM = `${BASE_SYSTEM}
 

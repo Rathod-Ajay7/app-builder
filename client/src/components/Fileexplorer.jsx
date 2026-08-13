@@ -3,7 +3,7 @@ import React, { Children, useMemo } from 'react'
 
 function buildtree(paths) {
     const root = [];
-    for (const filepath of paths.sort()) {
+    for (const filepath of [...paths].sort()) {
         const parts = filepath.split("/").filter(Boolean)
         let current = root;
         for (let i = 0; i < parts.length; i++) {
@@ -66,7 +66,7 @@ function TreeItem({ node, activefile, onfileselect, depth = 0 }) {
 
 function Fileexplorer({ files, activefile, onfileselect }) {
 
-    const tree = useMemo(() => buildtree(Object.keys(files), [files]));
+    const tree = useMemo(() => buildtree(Object.keys(files || {})), [files]);
 
     return (
         <div className='py-2 overflow-y-auto hide-scrollbar'>

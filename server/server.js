@@ -10,7 +10,8 @@ const app = express();
 
 await connecttodatabase();
 
-app.use(cors({ origin: process.env.ORIGINS.split(","), credentials: true }));
+const allowedOrigins = process.env.ORIGINS ? process.env.ORIGINS.split(",") : ["http://localhost:5173", "http://localhost:3000"];
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 
