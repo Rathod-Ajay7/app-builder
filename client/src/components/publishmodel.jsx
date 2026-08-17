@@ -37,9 +37,9 @@ const PublishModel = ({ publishurl, onclose }) => {
                             copy link
                         </button>
 
-                        <button onClick={() => { window.open(publishurl, '_blank') }} className='flex-1 py-2 border border-zinc-700 text-xs font-medium hover:bg-zinc-50 cursor-pointer rounded-lg text-center'>
+                        <a href={publishurl} target="_blank" rel="noopener noreferrer" className='flex-1 py-2 border border-zinc-700 text-xs font-medium hover:bg-zinc-50 cursor-pointer rounded-lg text-center'>
                             open site
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
