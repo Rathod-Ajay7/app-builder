@@ -23,7 +23,13 @@ function BuilderPage() {
 
   const handleopeprivew = () => {
     if (!id) return;
-    window.open(`/preview/${id}`, "_blank");
+    const a = document.createElement("a");
+    a.href = `/preview/${id}`;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
   const handlepublish = async () => {
     if (!id) return;
