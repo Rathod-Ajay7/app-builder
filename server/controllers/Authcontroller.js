@@ -5,14 +5,16 @@ const jwt_screat = process.env.JWT_SECRET || "fallback_secret";
 //helper to set cookie
 const setsessioncookie = (res, payload) => {
     const token = jwt.sign(payload, jwt_screat, { expiresIn: "30d" });
+    const isProd = process.env.NODE_ENV === "production";
     res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",
+        maxAge: 30 * 24 * 60 * 60 * 1000,
         path: "/",
-    })
-}
+    });
+};
+
 
 export async function register(req, res) {
     const { name, email, password } = req.body;
